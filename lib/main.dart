@@ -14,11 +14,16 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   var dev = const MethodChannel("flutterToastExample");
-  showMethod() {
-    
+  var img = const MethodChannel("flutterImage");
+  String? imgData;
+  showMethod() async {
     // dev.invokeMethod("showToast",
     //     {"message": "Sunil sir i had called toast from native code"});
     dev.invokeMethod("showToast", "calling string");
+    final i = await img.invokeMethod("image");
+    setState(() {
+      imgData = i;
+    });
   }
 
   @override
@@ -26,9 +31,17 @@ class _MainAppState extends State<MainApp> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.teal,
-        body: Center(
-          child: ElevatedButton(
-              onPressed: showMethod, child: const Text("show toast")),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: ElevatedButton(
+                  onPressed: showMethod, child: const Text("show toast")),
+            ),
+            Center(
+              child: Text(imgData.toString()),
+            )
+          ],
         ),
       ),
     );
